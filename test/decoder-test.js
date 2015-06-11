@@ -73,5 +73,91 @@ describe('hpack/decoder', function() {
 
       assert.equal(decoder.decodeStr().toString(), 'custom-key');
     });
+
+    it('should decode literal from (C.4.1)', function() {
+      decoder.push(new Buffer(
+        '8c' +
+            'f1e3 c2e5 f23a 6ba0 ab90 f4ff'.replace(/ /g, ''),
+        'hex'));
+
+      assert.equal(new Buffer(decoder.decodeStr()).toString(),
+                   'www.example.com');
+    });
+
+    it('should decode literal from (C.4.2)', function() {
+      decoder.push(new Buffer(
+        '86' +
+            'a8eb 1064 9cbf'.replace(/ /g, ''),
+        'hex'));
+
+      assert.equal(new Buffer(decoder.decodeStr()).toString(), 'no-cache');
+    });
+
+    it('should decode literal from (C.4.3) #1', function() {
+      decoder.push(new Buffer(
+        '88' +
+            '25a8 49e9 5ba9 7d7f'.replace(/ /g, ''),
+        'hex'));
+
+      assert.equal(new Buffer(decoder.decodeStr()).toString(), 'custom-key');
+    });
+
+    it('should decode literal from (C.4.3) #2', function() {
+      decoder.push(new Buffer(
+        '89' +
+            '25a8 49e9 5bb8 e8b4 bf'.replace(/ /g, ''),
+        'hex'));
+
+      assert.equal(new Buffer(decoder.decodeStr()).toString(), 'custom-value');
+    });
+
+    it('should decode literal from (C.6.1) #1', function() {
+      decoder.push(new Buffer(
+        ('96' +
+            'd07a be94 1054 d444 a820 0595 040b 8166' +
+            'e082 a62d 1bff').replace(/ /g, ''),
+        'hex'));
+
+      assert.equal(new Buffer(decoder.decodeStr()).toString(),
+                   'Mon, 21 Oct 2013 20:13:21 GMT');
+    });
+
+    it('should decode literal from (C.6.1) #2', function() {
+      decoder.push(new Buffer(
+        ('91' +
+            '9d29 ad17 1863 c78f 0b97 c8e9 ae82 ae43' +
+            'd3').replace(/ /g, ''),
+        'hex'));
+      assert.equal(new Buffer(decoder.decodeStr()).toString(),
+                   'https://www.example.com');
+    });
+
+    it('should decode many 5 bit chars', function() {
+      // e = 00101, 0x294A5294A5 = 00101 x 8
+      decoder.push(new Buffer('85294A5294A5', 'hex'));
+      assert.equal(new Buffer(decoder.decodeStr()).toString(), 'eeeeeeee');
+    });
+
+    it('should decode many 5 bit chars with 3-bit EOS', function() {
+      // e = 00101, EOS=111,
+      // 0x294A5294A52F = 00101 x 9 + 111
+      decoder.push(new Buffer('86294A5294A52F', 'hex'));
+      assert.equal(new Buffer(decoder.decodeStr()).toString(), 'eeeeeeeee');
+    });
+
+    it('should decode many 5 bit chars with 2-bit EOS', function() {
+      // e = 00101, EOS=11,
+      // 0x294A5297 = 00101 x 6 + 11
+      decoder.push(new Buffer('84294A5297', 'hex'));
+      assert.equal(new Buffer(decoder.decodeStr()).toString(), 'eeeeee');
+    });
+
+    it('should fail on 8 bit EOS', function() {
+      // e = 00101, 0x294A5294A5 = 00101 x 8
+      decoder.push(new Buffer('86294A5294A5ff', 'hex'));
+      assert.throws(function() {
+        decoder.decodeStr();
+      });
+    });
   });
 });
