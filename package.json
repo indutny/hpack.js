@@ -25,5 +25,8 @@
   "homepage": "https://github.com/indutny/hpack.js#readme",
   "devDependencies": {
     "mocha": "^2.2.5"
+  },
+  "dependencies": {
+    "obuf": "^0.1.1"
   }
 }
