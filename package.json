@@ -27,6 +27,6 @@
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "obuf": "^0.1.1"
+    "obuf": "^1.0.0"
   }
 }
