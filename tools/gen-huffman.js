@@ -1,3 +1,5 @@
+var utils = require('./utils');
+
 var table = `
     (  0)  |11111111|11000                             1ff8  [13]
     (  1)  |11111111|11111111|1011000                7fffd8  [23]
@@ -294,24 +296,5 @@ table.forEach(function(line) {
 });
 
 // Wrap lines after 79 chars
-var out = [];
-var pad = '    ';
-var line = pad;
-
-var chunks = JSON.stringify(root).split(/,/g);
-chunks.forEach(function(chunk, i) {
-  var append = chunk;
-  if (i !== chunks.length - 1)
-    append += ',';
-
-  if (line.length + append.length > 79) {
-    out.push(line);
-    line = pad;
-  }
-  line += append;
-});
-if (line !== pad)
-  out.push(line);
-
-out = 'module.exports =\n' + out.join('\n') + ';';
+out = 'module.exports =\n' + utils.wrap(JSON.stringify(root)) + ';';
 console.log(out);

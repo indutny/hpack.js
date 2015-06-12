@@ -27,6 +27,8 @@
     "mocha": "^2.2.5"
   },
   "dependencies": {
-    "obuf": "^1.0.0"
+    "inherits": "^2.0.1",
+    "obuf": "^1.0.0",
+    "readable-stream": "^2.0.0"
   }
 }
