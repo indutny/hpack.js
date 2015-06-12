@@ -264,9 +264,9 @@ table = table.split('\n').filter(function(line) {
 
 function createNode() {
   // See `encodeBits`
-  var arr = new Array(512);
+  var arr = new Array(256);
   for (var i = 0; i < arr.length; i++)
-    arr[i] = -1;
+    arr[i] = 0;
   return arr;
 }
 
@@ -274,10 +274,8 @@ var root = createNode();
 
 function encodeBits(bits) {
   var num = parseInt(bits, 2);
-  var len = bits.length;
 
-  // To match the length of encoding too
-  return (1 << len) | num;
+  return num;
 }
 
 table.forEach(function(line) {
@@ -288,11 +286,11 @@ table.forEach(function(line) {
   var node = root;
   for (var i = 0; i < bits.length - 1; i++) {
     var b = encodeBits(bits[i]);
-    if (node[b] === -1)
+    if (node[b] === 0)
       node[b] = createNode();
     node = node[b];
   }
-  node[encodeBits(bits[i])] = octet;
+  node[encodeBits(bits[i])] = [ bits[i].length, octet ];
 });
 
 // Wrap lines after 79 chars

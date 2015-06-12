@@ -152,9 +152,25 @@ describe('hpack/decoder', function() {
       assert.equal(new Buffer(decoder.decodeStr()).toString(), 'eeeeee');
     });
 
+    it('should decode many multi-octet chars', function() {
+      decoder.push(new Buffer('97ffffb1ffff63fffec7fffd8ffffb1ffff63fffec7fffd8', 'hex'));
+      assert.deepEqual(decoder.decodeStr(), [
+        1, 1, 1, 1, 1, 1, 1, 1
+      ]);
+    });
+
     it('should fail on 8 bit EOS', function() {
       // e = 00101, 0x294A5294A5 = 00101 x 8
       decoder.push(new Buffer('86294A5294A5ff', 'hex'));
+      assert.throws(function() {
+        decoder.decodeStr();
+      });
+    });
+
+    it('should fail on invalid 2-bit EOS', function() {
+      // e = 00101, EOS=10,
+      // 0x294A5297 = 00101 x 6 + 11
+      decoder.push(new Buffer('84294A5296', 'hex'));
       assert.throws(function() {
         decoder.decodeStr();
       });
