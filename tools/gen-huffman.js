@@ -290,7 +290,7 @@ table.forEach(function(line) {
       node[b] = createNode();
     node = node[b];
   }
-  node[encodeBits(bits[i])] = [ bits[i].length, octet ];
+  node[encodeBits(bits[i])] = (bits[i].length << 9) | octet;
 });
 
 // Wrap lines after 79 chars
