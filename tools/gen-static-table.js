@@ -81,4 +81,24 @@ table.split('\n').filter(function(line) {
   });
 });
 
-console.log('module.exports = ' + JSON.stringify(out, false, 2) + ';');
+console.log('exports.table = ' + JSON.stringify(out, false, 2) + ';');
+
+var map = {};
+table.split('\n').filter(function(line) {
+  return line;
+}).forEach(function(line) {
+  var columns = line.split(/\t/g);
+  var name = columns[1];
+  var value = columns[2];
+
+  var index = columns[0] | 0;
+  if (!map[name]) {
+    map[name] = {
+      index: index,
+      values: {}
+    };
+  }
+  if (value)
+    map[name].values[value] = index;
+});
+console.log('exports.map = ' + JSON.stringify(map, false, 2) + ';');
