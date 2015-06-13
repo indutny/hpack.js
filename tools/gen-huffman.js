@@ -272,7 +272,8 @@ function createNode() {
   return arr;
 }
 
-var root = createNode();
+var decode = createNode();
+var encode = createNode();
 
 function encodeBits(bits) {
   var num = parseInt(bits, 2);
@@ -281,20 +282,28 @@ function encodeBits(bits) {
 }
 
 table.forEach(function(line) {
-  var match = line.match(/\(\s*([\d]+)\)\s+\|([^\s]+)\s/);
+  var match = line.match(/\(\s*([\d]+)\)\s+\|([^\s]+)\s+([^\s]+)/);
   var octet = match[1] | 0;
   var bits = match[2].split(/\|/g);
+  var hex = parseInt(match[3], 16);
 
-  var node = root;
+  var node = decode;
+  var totalLen = 0;
   for (var i = 0; i < bits.length - 1; i++) {
     var b = encodeBits(bits[i]);
+    totalLen += bits[i].length;
     if (node[b] === 0)
       node[b] = createNode();
     node = node[b];
   }
+  totalLen += bits[i].length;
   node[encodeBits(bits[i])] = (bits[i].length << 9) | octet;
+  encode[octet] = [ totalLen, hex ];
 });
 
 // Wrap lines after 79 chars
-out = 'module.exports =\n' + utils.wrap(JSON.stringify(root)) + ';';
+out = 'exports.decode =\n' + utils.wrap(JSON.stringify(decode)) + ';';
+console.log(out);
+
+out = 'exports.encode =\n' + utils.wrap(JSON.stringify(encode)) + ';';
 console.log(out);

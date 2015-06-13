@@ -29,6 +29,7 @@
   "dependencies": {
     "inherits": "^2.0.1",
     "obuf": "^1.0.0",
-    "readable-stream": "^2.0.0"
+    "readable-stream": "^2.0.0",
+    "wbuf": "^1.1.0"
   }
 }

@@ -153,7 +153,9 @@ describe('hpack/decoder', function() {
     });
 
     it('should decode many multi-octet chars', function() {
-      decoder.push(new Buffer('97ffffb1ffff63fffec7fffd8ffffb1ffff63fffec7fffd8', 'hex'));
+      decoder.push(new Buffer(
+          '97ffffb1ffff63fffec7fffd8ffffb1ffff63fffec7fffd8',
+          'hex'));
       assert.deepEqual(decoder.decodeStr(), [
         1, 1, 1, 1, 1, 1, 1, 1
       ]);
