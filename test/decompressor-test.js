@@ -6,7 +6,9 @@ describe('hpack/decompressor', function() {
 
   beforeEach(function() {
     decomp = hpack.decompressor.create({
-      maxTableSize: 1024
+      table: {
+        maxSize: 1024
+      }
     });
   });
 
@@ -157,7 +159,9 @@ describe('hpack/decompressor', function() {
     var decomp;
     beforeEach(function() {
       decomp = hpack.decompressor.create({
-        maxTableSize: 256
+        table: {
+          maxSize: 256
+        }
       });
     });
 
