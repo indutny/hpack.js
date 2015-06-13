@@ -22,15 +22,15 @@ describe('hpack/decompressor', function() {
     it('should fetch entry from static table', function() {
       decomp.write(new Buffer([ 0b10000000 | 2 ]));
       var field = decomp.read();
-      assert.equal(field[0], ':method');
-      assert.equal(field[1], 'GET');
+      assert.equal(field.name, ':method');
+      assert.equal(field.value, 'GET');
     });
 
     it('should fetch entry from the end of the static table', function() {
       decomp.write(new Buffer([ 0b10000000 | 61 ]));
       var field = decomp.read();
-      assert.equal(field[0], 'www-authenticate');
-      assert.equal(field[1], '');
+      assert.equal(field.name, 'www-authenticate');
+      assert.equal(field.value, '');
     });
 
     it('should fail on OOB-index', function(cb) {
@@ -54,15 +54,15 @@ describe('hpack/decompressor', function() {
     it('should fetch entry from static table', function() {
       decomp.write(new Buffer([ 0b10000000 | 2 ]));
       var field = decomp.read();
-      assert.equal(field[0], ':method');
-      assert.equal(field[1], 'GET');
+      assert.equal(field.name, ':method');
+      assert.equal(field.value, 'GET');
     });
 
     it('should fetch entry from the end of the static table', function() {
       decomp.write(new Buffer([ 0b10000000 | 61 ]));
       var field = decomp.read();
-      assert.equal(field[0], 'www-authenticate');
-      assert.equal(field[1], '');
+      assert.equal(field.name, 'www-authenticate');
+      assert.equal(field.value, '');
     });
 
     it('should fail on OOB-index', function(cb) {
@@ -84,13 +84,13 @@ describe('hpack/decompressor', function() {
       decomp.write(Buffer.concat([ header, value ]));
 
       var field = decomp.read();
-      assert.equal(field[0], 'host');
-      assert.equal(field[1], 'localhost');
+      assert.equal(field.name, 'host');
+      assert.equal(field.value, 'localhost');
 
       decomp.write(new Buffer([ 0b10000000 | 62 ]));
       var field = decomp.read();
-      assert.equal(field[0], 'host');
-      assert.equal(field[1], 'localhost');
+      assert.equal(field.name, 'host');
+      assert.equal(field.value, 'localhost');
     });
 
     it('should lookup name in the table (not-incremental)', function(cb) {
@@ -103,8 +103,8 @@ describe('hpack/decompressor', function() {
       decomp.write(Buffer.concat([ header, value ]));
 
       var field = decomp.read();
-      assert.equal(field[0], 'host');
-      assert.equal(field[1], 'localhost');
+      assert.equal(field.name, 'host');
+      assert.equal(field.value, 'localhost');
 
       decomp.on('error', function(err) {
         assert(/field oob/i.test(err.message), err.message);
@@ -122,8 +122,8 @@ describe('hpack/decompressor', function() {
       for (var i = 0; i < 1000; i++) {
         decomp.write(Buffer.concat([ header, value ]));
         var field = decomp.read();
-        assert.equal(field[0], 'host');
-        assert.equal(field[1], 'localhost');
+        assert.equal(field.name, 'host');
+        assert.equal(field.value, 'localhost');
       }
 
       assert(decomp._table.size < decomp._table.maxSize);
@@ -141,8 +141,8 @@ describe('hpack/decompressor', function() {
 
       decomp.write(Buffer.concat([ header, value ]));
       var field = decomp.read();
-      assert.equal(field[0], 'host');
-      assert.equal(field[1], 'localhost');
+      assert.equal(field.name, 'host');
+      assert.equal(field.value, 'localhost');
       assert.equal(decomp._table.dynamic.length, 1);
 
       decomp.write(new Buffer([
@@ -404,14 +404,14 @@ describe('hpack/decompressor', function() {
           if (!chunk)
             break;
 
-          output.push([ chunk[0], chunk[1] ]);
+          output.push([ chunk.name, chunk.value ]);
         }
 
         assert.deepEqual(output, test.output);
 
         // Verify table contents
         assert.deepEqual(decomp._table.dynamic.map(function(header) {
-          return [ header[0], header[1], header[3] ];
+          return [ header.name, header.value, header.totalSize ];
         }).reverse(), test.table);
 
         // Verify table size

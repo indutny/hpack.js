@@ -73,7 +73,12 @@ table.split('\n').filter(function(line) {
   var value = columns[2];
   var nameSize = Buffer.byteLength(name);
   var valueSize = Buffer.byteLength(value);
-  out.push([ name, value, nameSize, nameSize + valueSize + 32 ]);
+  out.push({
+    name: name,
+    value: value,
+    nameSize: nameSize,
+    totalSize: nameSize + valueSize + 32
+  });
 });
 
 console.log('module.exports = ' + JSON.stringify(out, false, 2) + ';');
