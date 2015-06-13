@@ -45,38 +45,6 @@ describe('hpack/decompressor', function() {
     });
   });
 
-  describe('indexed field', function() {
-    it('should fail on 0-index', function(cb) {
-      decomp.on('error', function(err) {
-        assert(/zero index/i.test(err.message), err.message);
-        cb();
-      });
-      decomp.write(new Buffer([ 0b10000000 ]));
-    });
-
-    it('should fetch entry from static table', function() {
-      decomp.write(new Buffer([ 0b10000000 | 2 ]));
-      var field = decomp.read();
-      assert.equal(field.name, ':method');
-      assert.equal(field.value, 'GET');
-    });
-
-    it('should fetch entry from the end of the static table', function() {
-      decomp.write(new Buffer([ 0b10000000 | 61 ]));
-      var field = decomp.read();
-      assert.equal(field.name, 'www-authenticate');
-      assert.equal(field.value, '');
-    });
-
-    it('should fail on OOB-index', function(cb) {
-      decomp.on('error', function(err) {
-        assert(/field oob/i.test(err.message), err.message);
-        cb();
-      });
-      decomp.write(new Buffer([ 0b11000000 ]));
-    });
-  });
-
   describe('literal field', function() {
     it('should lookup name in the table (incremental)', function() {
       var value = new Buffer('localhost');

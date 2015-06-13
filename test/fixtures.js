@@ -1,6 +1,7 @@
 exports.specExamples = [
   {
     id: 'C.3.1',
+    huffman: false,
     input: '8286 8441 0f77 7777 2e65 7861 6d70 6c65' +
            '2e63 6f6d',
     output: [
@@ -16,6 +17,7 @@ exports.specExamples = [
   {
     id: 'C.3.2',
     continuation: true,
+    huffman: false,
     input: '8286 84be 5808 6e6f 2d63 6163 6865',
     output: [
       [ ':method', 'GET' ],
@@ -32,6 +34,7 @@ exports.specExamples = [
   {
     id: 'C.3.3',
     continuation: true,
+    huffman: false,
     input: '8287 85bf 400a 6375 7374 6f6d 2d6b 6579' +
            '0c63 7573 746f 6d2d 7661 6c75 65',
     output: [
@@ -99,6 +102,7 @@ exports.specExamples = [
 
   {
     id: 'C.5.1',
+    huffman: false,
     input: '4803 3330 3258 0770 7269 7661 7465 611d' +
            '4d6f 6e2c 2032 3120 4f63 7420 3230 3133' +
            '2032 303a 3133 3a32 3120 474d 546e 1768' +
@@ -119,6 +123,7 @@ exports.specExamples = [
   },
   {
     id: 'C.5.2',
+    huffman: false,
     continuation: true,
     input: '4803 3330 37c1 c0bf',
     output: [
@@ -136,6 +141,7 @@ exports.specExamples = [
   },
   {
     id: 'C.5.3',
+    huffman: false,
     continuation: true,
     input: '88c1 611d 4d6f 6e2c 2032 3120 4f63 7420' +
            '3230 3133 2032 303a 3133 3a32 3220 474d' +

@@ -98,7 +98,6 @@ table.split('\n').filter(function(line) {
       values: {}
     };
   }
-  if (value)
-    map[name].values[value] = index;
+  map[name].values[value] = index;
 });
 console.log('exports.map = ' + JSON.stringify(map, false, 2) + ';');
