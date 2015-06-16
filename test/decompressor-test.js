@@ -15,12 +15,11 @@ describe('hpack/decompressor', function() {
 
   describe('indexed field', function() {
     it('should fail on 0-index', function(cb) {
-      decomp.on('error', function(err) {
+      decomp.write(new Buffer([ 0b10000000 ]));
+      decomp.execute(function(err) {
         assert(/zero index/i.test(err.message), err.message);
         cb();
       });
-      decomp.write(new Buffer([ 0b10000000 ]));
-      decomp.execute();
     });
 
     it('should fetch entry from static table', function() {
@@ -40,12 +39,11 @@ describe('hpack/decompressor', function() {
     });
 
     it('should fail on OOB-index', function(cb) {
-      decomp.on('error', function(err) {
+      decomp.write(new Buffer([ 0b11000000 ]));
+      decomp.execute(function(err) {
         assert(/field oob/i.test(err.message), err.message);
         cb();
       });
-      decomp.write(new Buffer([ 0b11000000 ]));
-      decomp.execute();
     });
   });
 
@@ -84,12 +82,11 @@ describe('hpack/decompressor', function() {
       assert.equal(field.name, 'host');
       assert.equal(field.value, 'localhost');
 
-      decomp.on('error', function(err) {
+      decomp.write(new Buffer([ 0b10000000 | 62 ]));
+      decomp.execute(function(err) {
         assert(/field oob/i.test(err.message), err.message);
         cb();
       });
-      decomp.write(new Buffer([ 0b10000000 | 62 ]));
-      decomp.execute();
     });
 
     it('should evict header field from the table', function() {
