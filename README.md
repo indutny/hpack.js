@@ -19,6 +19,7 @@ console.log(raw);
 // <Buffer 66 86 a0 e4 1d 13 9d 09>
 
 decomp.write(raw);
+decomp.execute();
 console.log(decomp.read());
 // { name: 'host', value: 'localhost', neverIndex: false }
 ```
