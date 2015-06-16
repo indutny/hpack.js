@@ -20,10 +20,12 @@ describe('hpack/decompressor', function() {
         cb();
       });
       decomp.write(new Buffer([ 0b10000000 ]));
+      decomp.execute();
     });
 
     it('should fetch entry from static table', function() {
       decomp.write(new Buffer([ 0b10000000 | 2 ]));
+      decomp.execute();
       var field = decomp.read();
       assert.equal(field.name, ':method');
       assert.equal(field.value, 'GET');
@@ -31,6 +33,7 @@ describe('hpack/decompressor', function() {
 
     it('should fetch entry from the end of the static table', function() {
       decomp.write(new Buffer([ 0b10000000 | 61 ]));
+      decomp.execute();
       var field = decomp.read();
       assert.equal(field.name, 'www-authenticate');
       assert.equal(field.value, '');
@@ -42,6 +45,7 @@ describe('hpack/decompressor', function() {
         cb();
       });
       decomp.write(new Buffer([ 0b11000000 ]));
+      decomp.execute();
     });
   });
 
@@ -53,12 +57,14 @@ describe('hpack/decompressor', function() {
         value.length
       ]);
       decomp.write(Buffer.concat([ header, value ]));
+      decomp.execute();
 
       var field = decomp.read();
       assert.equal(field.name, 'host');
       assert.equal(field.value, 'localhost');
 
       decomp.write(new Buffer([ 0b10000000 | 62 ]));
+      decomp.execute();
       var field = decomp.read();
       assert.equal(field.name, 'host');
       assert.equal(field.value, 'localhost');
@@ -72,6 +78,7 @@ describe('hpack/decompressor', function() {
         value.length
       ]);
       decomp.write(Buffer.concat([ header, value ]));
+      decomp.execute();
 
       var field = decomp.read();
       assert.equal(field.name, 'host');
@@ -82,6 +89,7 @@ describe('hpack/decompressor', function() {
         cb();
       });
       decomp.write(new Buffer([ 0b10000000 | 62 ]));
+      decomp.execute();
     });
 
     it('should evict header field from the table', function() {
@@ -92,6 +100,7 @@ describe('hpack/decompressor', function() {
       ]);
       for (var i = 0; i < 1000; i++) {
         decomp.write(Buffer.concat([ header, value ]));
+        decomp.execute();
         var field = decomp.read();
         assert.equal(field.name, 'host');
         assert.equal(field.value, 'localhost');
@@ -111,6 +120,7 @@ describe('hpack/decompressor', function() {
       ]);
 
       decomp.write(Buffer.concat([ header, value ]));
+      decomp.execute();
       var field = decomp.read();
       assert.equal(field.name, 'host');
       assert.equal(field.value, 'localhost');
@@ -119,6 +129,7 @@ describe('hpack/decompressor', function() {
       decomp.write(new Buffer([
         0b00100000
       ]));
+      decomp.execute();
 
       assert.equal(decomp._table.dynamic.length, 0);
     });
@@ -145,6 +156,7 @@ describe('hpack/decompressor', function() {
         decomp = startFrom;
 
         decomp.write(new Buffer(test.input.replace(/ /g, ''), 'hex'));
+        decomp.execute();
 
         var output = [];
         for (;;) {
