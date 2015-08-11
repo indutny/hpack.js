@@ -74,6 +74,12 @@ describe('hpack/encoder', function() {
       encoder.encodeInt(42);
       expect([ 0b00101010 ]);
     });
+
+    it('should regression 6-bit test', function() {
+      encoder.skipBits(2);
+      encoder.encodeInt(63);
+      expect([ 0b00111111, 0b00000000 ]);
+    });
   });
 
   describe('string', function() {
