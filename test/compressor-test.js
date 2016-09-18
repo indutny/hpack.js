@@ -85,6 +85,13 @@ describe('hpack/compressor', function() {
       comp.write([{ name: 'host', value: 'localhost' }]);
       expect('6686a0e41d139d09', 'hex');
     });
+
+    it('should send dynamic update if size >= protocolMaxSize', function() {
+      comp.updateTableSize(Infinity);
+
+      // update=maxSize
+      expect('3f00', 'hex');
+    });
   });
 
   describe('spec examples', function() {
