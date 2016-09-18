@@ -79,8 +79,8 @@ describe('hpack/compressor', function() {
 
       comp.reset();
 
-      // update=0, update=size
-      expect('203f0e', 'hex');
+      // update=0, update=maxSize
+      expect('203fe107', 'hex');
 
       comp.write([{ name: 'host', value: 'localhost' }]);
       expect('6686a0e41d139d09', 'hex');
