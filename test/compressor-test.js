@@ -90,7 +90,7 @@ describe('hpack/compressor', function() {
       comp.updateTableSize(Infinity);
 
       // update=maxSize
-      expect('3f00', 'hex');
+      expect('3fe107', 'hex');
     });
   });
 
