@@ -1,6 +1,6 @@
 {
   "name": "hpack.js",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "HPACK implementation",
   "main": "lib/hpack.js",
   "scripts": {
